@@ -1,12 +1,10 @@
-#include <cmath>
-#include <vector>
 #include <algorithm>
-#include <stdint.h>
 #include <assert.h>
+#include <cmath>
+#include <stdint.h>
+#include <vector>
 
-template <typename T>
-T clamp(T v, T lower_bound, T higher_bound)
-{
+template <typename T> T clamp(T v, T lower_bound, T higher_bound) {
   if (v < lower_bound) {
     return lower_bound;
   } else if (v > higher_bound) {
@@ -29,14 +27,9 @@ size_t gcd(size_t a, size_t b) {
   return a;
 }
 
-bool coprime(size_t a, size_t b)
-{
-  return gcd(a, b) == 1;
-}
+bool coprime(size_t a, size_t b) { return gcd(a, b) == 1; }
 
-
-bool coprime_with_series(size_t proposed, const std::vector<size_t>& series)
-{
+bool coprime_with_series(size_t proposed, const std::vector<size_t> &series) {
   for (size_t i = 0; i < series.size(); i++) {
     if (!coprime(series[i], proposed)) {
       return false;
@@ -45,10 +38,10 @@ bool coprime_with_series(size_t proposed, const std::vector<size_t>& series)
   return true;
 }
 
-/// Find a series of `count` number that are set coprime, and start at `start`, with a geometric
-/// progression of ratio `factor`
-std::vector<size_t> coprime_with_progression(size_t start, float factor, size_t count)
-{
+/// Find a series of `count` number that are set coprime, and start at `start`,
+/// with a geometric progression of ratio `factor`
+std::vector<size_t> coprime_with_progression(size_t start, float factor,
+                                             size_t count) {
   std::vector<size_t> series;
   series.reserve(count);
   size_t current = static_cast<size_t>(start * factor);
@@ -77,13 +70,10 @@ std::vector<size_t> coprime_with_progression(size_t start, float factor, size_t 
   return series;
 }
 
-size_t idx(size_t x, size_t y, size_t width) {
-  return y * width + x;
-}
+size_t idx(size_t x, size_t y, size_t width) { return y * width + x; }
 
 // http://en.wikipedia.org/wiki/Hadamard_matrix sylvester construction
-std::vector<float> hadamard(size_t order)
-{
+std::vector<float> hadamard(size_t order) {
   if ((order == 0 || order & (order - 1)) != 0) {
     assert(false && "Error, order must be a even");
   }
@@ -106,8 +96,8 @@ std::vector<float> hadamard(size_t order)
 }
 
 template <size_t N>
-void matrix_vector_multiply(float vector[N], float matrix[N*N], float output[N])
-{
+void matrix_vector_multiply(float vector[N], float matrix[N * N],
+                            float output[N]) {
   for (size_t i = 0; i < N; i++) {
     for (size_t j = 0; j < N; j++) {
       output[i] += matrix[i * N + j] * vector[j];

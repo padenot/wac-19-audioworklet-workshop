@@ -8,8 +8,8 @@ pub mod filter;
 pub mod softclip;
 pub mod utils;
 
-use crate::delay_line::DelayLine;
 use crate::allpass::Allpass;
+use crate::delay_line::DelayLine;
 use crate::filter::Filter;
 use crate::softclip::Softclip;
 use crate::utils::{coprime_with_progression, hadamard, matrix_vector_multiply};
@@ -24,10 +24,7 @@ impl Processor {
     pub fn new() -> Processor {
         let mut delay = DelayLine::new(44100);
         delay.set_duration(44100 / 2); // 100ms
-        Processor {
-            load: 1.0,
-            delay,
-        }
+        Processor { load: 1.0, delay }
     }
 
     pub fn process(&mut self, in_ptr: *mut f32, out_ptr: *mut f32, size: usize) {

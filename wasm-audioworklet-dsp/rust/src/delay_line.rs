@@ -20,7 +20,11 @@ impl DelayLine {
     }
     pub fn set_duration(&mut self, duration: usize) {
         let d = if duration > self.memory.len() {
-            println!("clipping duration in delay: {} >= {}", duration, self.memory.len());
+            println!(
+                "clipping duration in delay: {} >= {}",
+                duration,
+                self.memory.len()
+            );
             self.memory.len()
         } else {
             duration
@@ -33,7 +37,13 @@ impl DelayLine {
             self.memory.len() - (self.duration - self.write_index)
         };
 
-        println!("rd {} wr {} len {} duration{}", self.read_index, self.write_index, self.memory.len(), self.duration);
+        println!(
+            "rd {} wr {} len {} duration{}",
+            self.read_index,
+            self.write_index,
+            self.memory.len(),
+            self.duration
+        );
         //panic!("Ok");
     }
     pub fn write(&mut self, input: f32) {

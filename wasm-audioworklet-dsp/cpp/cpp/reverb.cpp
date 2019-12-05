@@ -12,34 +12,30 @@
 // #include "allpass.h"
 //
 extern "C" {
-  EMSCRIPTEN_KEEPALIVE
-  DelayLine* init_effect(int sample_rate)
-  {
-    DelayLine* delay = new DelayLine(sample_rate);
-    delay->set_duration(sample_rate / 10); // 100ms
+EMSCRIPTEN_KEEPALIVE
+DelayLine *init_effect(int sample_rate) {
+  DelayLine *delay = new DelayLine(sample_rate);
+  delay->set_duration(sample_rate / 10); // 100ms
 
-    return delay;
+  return delay;
+}
+EMSCRIPTEN_KEEPALIVE
+void process(DelayLine *delay, float *input, float *output, size_t size) {
+  float out;
+  for (size_t i = 0; i < size; i++) {
+    delay->process(input[i], &out);
+    // half-gain on the feedback
+    output[i] = input[i] + 0.5 * out;
   }
-  EMSCRIPTEN_KEEPALIVE
-  void process(DelayLine* delay, float* input, float* output, size_t size)
-  {
-    float out;
-    for (size_t i = 0; i < size; i++) {
-      delay->process(input[i], &out);
-      // half-gain on the feedback
-      output[i] = input[i] + 0.5 * out;
-    }
-  }
+}
 
-  EMSCRIPTEN_KEEPALIVE
-  float* alloc(size_t size) {
-    return new float[size];
-  }
+EMSCRIPTEN_KEEPALIVE
+float *alloc(size_t size) { return new float[size]; }
 };
 
 #ifndef EMSCRIPTEN
 int main() {
-  DelayLine* delay = init_effect(100);
+  DelayLine *delay = init_effect(100);
   delay->set_duration(50);
   std::vector<float> input(1000);
   std::vector<float> output(1000);

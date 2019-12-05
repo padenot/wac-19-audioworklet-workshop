@@ -1,45 +1,55 @@
 var $ = document.querySelectorAll.bind(document);
 
-const ctx = new AudioContext()
+const ctx = new AudioContext();
 
 if (ctx.audioWorklet === undefined) {
-  alert("no audioworklet")
+  alert("no audioworklet");
 } else {
-  ctx.audioWorklet.addModule('js/processor.js').then(() => {
+  ctx.audioWorklet.addModule("js/processor.js").then(() => {
     // Use a sine wave so it's easier to hear glitches
     var osc = new OscillatorNode(ctx);
-    const n = new AudioWorkletNode(ctx, 'processor');
+    const n = new AudioWorkletNode(ctx, "processor");
     osc.connect(n);
     osc.start();
     n.connect(ctx.destination);
 
-    var source_lang = $('.source-language')[0].value;
+    var source_lang = $(".source-language")[0].value;
 
     let sab = RingBuffer.getStorageForCapacity(31);
     let rb = new RingBuffer(sab);
     let paramWriter = new ParameterWriter(rb);
-    n.port.postMessage({ type: 'recv-message-queue', data: sab, code: RingBuffer.toSource() + "\n" + ParameterReader.toSource()});
+    n.port.postMessage({
+      type: "recv-message-queue",
+      data: sab,
+      code: RingBuffer.toSource() + "\n" + ParameterReader.toSource()
+    });
 
     bytes = new Uint8Array(4);
     var i = 0;
 
     var is_wasm = source_lang.indexOf("wasm") != -1;
-    fetch(source_lang).then(r => {
-      if (is_wasm) {
-        return r.arrayBuffer();
-      }
-      return r.text();
-    }).then(r => n.port.postMessage({ type: 'load-processor',
-                                      data: r ,
-                                      wasm: is_wasm }));
+    fetch(source_lang)
+      .then(r => {
+        if (is_wasm) {
+          return r.arrayBuffer();
+        }
+        return r.text();
+      })
+      .then(r =>
+        n.port.postMessage({
+          type: "load-processor",
+          data: r,
+          wasm: is_wasm
+        })
+      );
 
-    const load = $('.load')[0]
-    const label = $('.loadLabel')[0]
+    const load = $(".load")[0];
+    const label = $(".loadLabel")[0];
 
-    load.addEventListener('input', e => {
+    load.addEventListener("input", e => {
       label.innerText = e.target.value;
       paramWriter.enqueue_change(0, e.target.value);
-    })
+    });
   });
 }
 
@@ -54,7 +64,7 @@ gc.onclick = function() {
     gc.innerText = "Start generating garbage";
     gc_pressure = false;
   }
-}
+};
 
 var array = [];
 
@@ -71,7 +81,6 @@ function render() {
 }
 requestAnimationFrame(render);
 
-
 var start = $(".start")[0];
 start.onclick = function() {
   if (ctx.state == "running") {
@@ -81,4 +90,4 @@ start.onclick = function() {
     ctx.resume();
     start.innerText = "Stop";
   }
-}
+};

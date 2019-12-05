@@ -4,7 +4,7 @@
 // except with external synchronization.
 class RingBuffer {
   static getStorageForCapacity(capacity) {
-        return new SharedArrayBuffer(capacity + 9);
+    return new SharedArrayBuffer(capacity + 9);
   }
   // `sab` is a SharedArrayBuffer with a capacity calculated by calling
   // `getStorageForCapacity` with the desired capacity.
@@ -27,7 +27,7 @@ class RingBuffer {
     var rd = Atomics.load(this.read_ptr, 0);
     var wr = Atomics.load(this.write_ptr, 0);
 
-    if ((wr+1) % this._storage_capacity() == rd) {
+    if ((wr + 1) % this._storage_capacity() == rd) {
       // full
       return 0;
     }
@@ -40,7 +40,11 @@ class RingBuffer {
     this._copy(bytes, first_part, this.storage, 0, second_part);
 
     // publish the enqueued data to the other side
-    Atomics.store(this.write_ptr, 0, (wr + to_write) % this._storage_capacity());
+    Atomics.store(
+      this.write_ptr,
+      0,
+      (wr + to_write) % this._storage_capacity()
+    );
 
     return to_write;
   }
@@ -82,7 +86,7 @@ class RingBuffer {
     var rd = Atomics.load(this.read_ptr, 0);
     var wr = Atomics.load(this.write_ptr, 0);
 
-    return (wr+1) % this.capacity != rd;
+    return (wr + 1) % this.capacity != rd;
   }
 
   // The usable capacity for the ring buffer: the number of bytes that can be
@@ -122,7 +126,7 @@ class RingBuffer {
   // Number of bytes available from writing, given a read and write pointer.
   _available_write(rd, wr) {
     let rv = rd - wr - 1;
-    if (wr>= rd) {
+    if (wr >= rd) {
       rv += this._storage_capacity();
     }
     return rv;
@@ -138,7 +142,7 @@ class RingBuffer {
   _copy(input, offset_input, output, offset_output, size) {
     // XXX change this to use larger data type to output better code?
     for (var i = 0; i < size; i++) {
-      output[offset_output+i] = input[offset_input+i];
+      output[offset_output + i] = input[offset_input + i];
     }
   }
 }

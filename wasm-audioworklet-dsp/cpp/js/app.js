@@ -1,24 +1,27 @@
 var $ = document.querySelectorAll.bind(document);
-const ctx = new AudioContext()
+const ctx = new AudioContext();
 if (ctx.audioWorklet === undefined) {
-  alert("no audioworklet")
+  alert("no audioworklet");
 } else {
-  fetch('audio-samples/Alzir-Break-Mono.wav').then(raw => raw.arrayBuffer()).then(b => ctx.decodeAudioData(b)).then(function(audiobuffer) {
-    ctx.audioWorklet.addModule('js/processor.js').then(() => {
-      // Use a sine wave so it's easier to hear glitches
-      var source = new AudioBufferSourceNode(ctx);
-      source.buffer = audiobuffer;
-      source.start();
-      source.loop = true;
-      const n = new AudioWorkletNode(ctx, 'processor');
-      source.connect(n);
-      n.connect(ctx.destination);
+  fetch("audio-samples/Alzir-Break-Mono.wav")
+    .then(raw => raw.arrayBuffer())
+    .then(b => ctx.decodeAudioData(b))
+    .then(function(audiobuffer) {
+      ctx.audioWorklet.addModule("js/processor.js").then(() => {
+        // Use a sine wave so it's easier to hear glitches
+        var source = new AudioBufferSourceNode(ctx);
+        source.buffer = audiobuffer;
+        source.start();
+        source.loop = true;
+        const n = new AudioWorkletNode(ctx, "processor");
+        source.connect(n);
+        n.connect(ctx.destination);
 
-      fetch("wasm/wasm_audioworklet.wasm")
-        .then(r => r.arrayBuffer())
-        .then(r => n.port.postMessage({ type: 'load-processor', data: r}));
+        fetch("wasm/wasm_audioworklet.wasm")
+          .then(r => r.arrayBuffer())
+          .then(r => n.port.postMessage({ type: "load-processor", data: r }));
+      });
     });
-  })
 }
 
 var gc_pressure = false;
@@ -32,7 +35,7 @@ gc.onclick = function() {
     gc.innerText = "Start generating garbage";
     gc_pressure = false;
   }
-}
+};
 
 var array = [];
 
@@ -49,7 +52,6 @@ function render() {
 }
 requestAnimationFrame(render);
 
-
 var start = $(".start")[0];
 
 start.onclick = function() {
@@ -60,4 +62,4 @@ start.onclick = function() {
     ctx.resume();
     start.innerText = "Stop";
   }
-}
+};

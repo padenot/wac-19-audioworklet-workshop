@@ -2,17 +2,14 @@
 
 class SoftClip {
 public:
-  SoftClip(float hardness)
-    : hardness(hardness)
-  { }
-  void set_hardness(float hardness) {
-    this->hardness = hardness;
-  }
-  void process(float input, float* output) {
+  SoftClip(float hardness) : hardness(hardness) {}
+  void set_hardness(float hardness) { this->hardness = hardness; }
+  void process(float input, float *output) {
     *output = fast_tanh(hardness * input) / hardness;
     // alternative clipper
     // *output = input / sqrt(5. + (input*input));
   }
+
 private:
   float fast_tanh(float x) {
     float x2 = x * x;

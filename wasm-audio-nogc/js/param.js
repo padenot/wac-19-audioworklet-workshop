@@ -19,7 +19,7 @@ class ParameterWriter {
     const SIZE_ELEMENT = 5;
     this.ringbuf = ringbuf;
     this.mem = new ArrayBuffer(SIZE_ELEMENT);
-    this.array = new Uint8Array(this.mem)
+    this.array = new Uint8Array(this.mem);
     this.view = new DataView(this.mem);
   }
   // Enqueue a parameter change for parameter of index `index`, with a new value
@@ -41,7 +41,7 @@ class ParameterReader {
     const SIZE_ELEMENT = 5;
     this.ringbuf = ringbuf;
     this.mem = new ArrayBuffer(SIZE_ELEMENT);
-    this.array = new Uint8Array(this.mem)
+    this.array = new Uint8Array(this.mem);
     this.view = new DataView(this.mem);
   }
   dequeue_change(o) {

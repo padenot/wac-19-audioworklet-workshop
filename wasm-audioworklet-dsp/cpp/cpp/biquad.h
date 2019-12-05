@@ -32,25 +32,25 @@
 // Web Audio API Biquad filter originally from WebKit, forked for Gecko
 // https://searchfox.org/mozilla-central/source/dom/media/webaudio/blink/Biquad.cpp
 
-#include <float.h>
 #include <algorithm>
 #include <complex>
+#include <float.h>
 #include <math.h>
 
 class Biquad {
   typedef std::complex<double> Complex;
-  public:
 
+public:
   Biquad() {
     // Initialize as pass-thru (straight-wire, no filter effect)
     set_normalized_coefficients(1, 0, 0, 1, 0, 0);
 
-    reset();  // clear filter memory
+    reset(); // clear filter memory
   }
 
   ~Biquad() {}
 
-  void process(float input, float* output) {
+  void process(float input, float *output) {
     // Create local copies of member variables
     double x1 = m_x1;
     double x2 = m_x2;
@@ -163,7 +163,7 @@ class Biquad {
       set_normalized_coefficients(A * A, 0, 0, 1, 0, 0);
     } else if (frequency > 0) {
       double w0 = M_PI * frequency;
-      double S = 1;  // filter slope (1 is max value)
+      double S = 1; // filter slope (1 is max value)
       double alpha = 0.5 * sin(w0) * sqrt((A + 1 / A) * (1 / S - 1) + 2);
       double k = cos(w0);
       double k2 = 2 * sqrt(A) * alpha;
@@ -195,7 +195,7 @@ class Biquad {
       set_normalized_coefficients(1, 0, 0, 1, 0, 0);
     } else if (frequency > 0) {
       double w0 = M_PI * frequency;
-      double S = 1;  // filter slope (1 is max value)
+      double S = 1; // filter slope (1 is max value)
       double alpha = 0.5 * sin(w0) * sqrt((A + 1 / A) * (1 / S - 1) + 2);
       double k = cos(w0);
       double k2 = 2 * sqrt(A) * alpha;
@@ -354,7 +354,7 @@ class Biquad {
     }
   }
 
-  void setZeroPolePairs(const Complex& zero, const Complex& pole) {
+  void setZeroPolePairs(const Complex &zero, const Complex &pole) {
     double b0 = 1;
     double b1 = -2 * zero.real();
 
@@ -368,13 +368,13 @@ class Biquad {
     set_normalized_coefficients(b0, b1, b2, 1, a1, a2);
   }
 
-  void setAllpassPole(const Complex& pole) {
+  void setAllpassPole(const Complex &pole) {
     Complex zero = Complex(1, 0) / pole;
     setZeroPolePairs(zero, pole);
   }
 
-  void getFrequencyResponse(int nFrequencies, const float* frequency,
-      float* magResponse, float* phaseResponse) {
+  void getFrequencyResponse(int nFrequencies, const float *frequency,
+                            float *magResponse, float *phaseResponse) {
     // Evaluate the Z-transform of the filter at given normalized
     // frequency from 0 to 1.  (1 corresponds to the Nyquist
     // frequency.)
@@ -389,7 +389,8 @@ class Biquad {
     // --------------------
     // 1 + (a1 + a2*z1)*z1
     //
-    // with z1 = 1/z and z = exp(j*pi*frequency). Hence z1 = exp(-j*pi*frequency)
+    // with z1 = 1/z and z = exp(j*pi*frequency). Hence z1 =
+    // exp(-j*pi*frequency)
 
     // Make local copies of the coefficients as a micro-optimization.
     double b0 = m_b0;
@@ -409,23 +410,23 @@ class Biquad {
       // things the long way here.
       double n = norm(denominator);
       double r = (real(numerator) * real(denominator) +
-          imag(numerator) * imag(denominator)) /
-        n;
+                  imag(numerator) * imag(denominator)) /
+                 n;
       double i = (imag(numerator) * real(denominator) -
-          real(numerator) * imag(denominator)) /
-        n;
+                  real(numerator) * imag(denominator)) /
+                 n;
       std::complex<double> response = std::complex<double>(r, i);
 
       magResponse[k] = static_cast<float>(abs(response));
       phaseResponse[k] =
-        static_cast<float>(atan2(imag(response), real(response)));
+          static_cast<float>(atan2(imag(response), real(response)));
     }
   }
   bool hasTail() const { return m_y1 || m_y2 || m_x1 || m_x2; }
 
 private:
-  void set_normalized_coefficients(double b0, double b1, double b2,
-      double a0, double a1, double a2) {
+  void set_normalized_coefficients(double b0, double b1, double b2, double a0,
+                                   double a1, double a2) {
     double a0Inverse = 1 / a0;
 
     m_b0 = b0 * a0Inverse;
@@ -449,10 +450,10 @@ private:
   // Double precision for the output values is valuable because errors can
   // accumulate.  Input values are also stored as double so they need not be
   // converted again for computation.
-  double m_x1;  // input delayed by 1 sample
-  double m_x2;  // input delayed by 2 samples
-  double m_y1;  // output delayed by 1 sample
-  double m_y2;  // output delayed by 2 samples
+  double m_x1; // input delayed by 1 sample
+  double m_x2; // input delayed by 2 samples
+  double m_y1; // output delayed by 1 sample
+  double m_y2; // output delayed by 2 samples
 };
 
 #endif // BIQUAD_H

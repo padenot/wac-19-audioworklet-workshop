@@ -9,9 +9,7 @@ pub struct Processor {
 
 impl Processor {
     pub fn new() -> Processor {
-        Processor {
-            load: 1.0,
-        }
+        Processor { load: 1.0 }
     }
 
     pub fn process(&mut self, in_ptr: *mut f32, out_ptr: *mut f32, size: usize) {
