@@ -1,0 +1,11 @@
+[package]
+name = "wasm-audioworklet-load"
+version = "0.1.0"
+authors = ["Paul Adenot <paul@paul.cx>"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+lazy_static = "1.2.0"

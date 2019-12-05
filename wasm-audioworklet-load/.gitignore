@@ -1,0 +1,6 @@
+rust/target
+**/*.rs.bk
+Cargo.lock
+cpp/wasm_audioworklet_load.wasm
+*.o
+*.bc
