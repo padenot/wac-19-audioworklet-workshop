@@ -16,8 +16,8 @@ class LoadProcessor extends AudioWorkletProcessor {
           this._wasm = instance;
           this._process = this._wasm.exports.process;
           this._set_load = this._wasm.exports.set_load;
-          this._inPtr = this._wasm.exports.alloc(this._size);
-          this._outPtr = this._wasm.exports.alloc(this._size);
+          this._inPtr = this._wasm.exports.alloc(this._size * 4);
+          this._outPtr = this._wasm.exports.alloc(this._size * 4);
           this._inBuf = new Float32Array(
             this._wasm.exports.memory.buffer,
             this._inPtr,
@@ -56,7 +56,7 @@ class LoadProcessor extends AudioWorkletProcessor {
     let input = inputs[0];
     for (let channel = 0; channel < input.length; ++channel) {
       for (var i = 0; i < 128; i++) {
-        this._inBuf[i] = 128 * channel + input[channel][i];
+        this._inBuf[i] = input[channel][i];
       }
     }
     for (let channel = 0; channel < output.length; channel++) {

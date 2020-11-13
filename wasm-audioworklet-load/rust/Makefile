@@ -2,7 +2,7 @@
 
 all: ../wasm/wasm_audioworklet_load_rust.wasm
 
-target/wasm32-unknown-unknown/release/wasm_audioworklet_load.wasm:
+target/wasm32-unknown-unknown/release/wasm_audioworklet_load.wasm: src/lib.rs
 	@cargo build --target wasm32-unknown-unknown --release
 
 ../wasm/wasm_audioworklet_load_rust.wasm: target/wasm32-unknown-unknown/release/wasm_audioworklet_load.wasm
